@@ -1,14 +1,13 @@
 /**
  * QSS Theme Manager
- * - Reads system preference via prefers-color-scheme
- * - Persists manual override to localStorage
- * - Sets data-theme on <html> before paint to prevent flash
+ * Runs before paint to prevent flash.
+ * Default: dark mode (unless user has explicitly chosen light).
  */
-
 (function () {
   const stored = localStorage.getItem("qss-theme");
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const theme = stored || (prefersDark ? "dark" : "light");
+  // Default to dark unless user explicitly stored "light"
+  const theme = stored ? stored : (prefersDark ? "dark" : "dark");
   document.documentElement.setAttribute("data-theme", theme);
 })();
 
@@ -17,7 +16,7 @@ function initThemeToggle() {
   if (!btn) return;
 
   function getTheme() {
-    return document.documentElement.getAttribute("data-theme") || "light";
+    return document.documentElement.getAttribute("data-theme") || "dark";
   }
 
   function setTheme(t) {
@@ -28,14 +27,12 @@ function initThemeToggle() {
     btn.textContent = t === "dark" ? "☀️" : "🌙";
   }
 
-  // Init button state
   setTheme(getTheme());
 
   btn.addEventListener("click", () => {
     setTheme(getTheme() === "dark" ? "light" : "dark");
   });
 
-  // Sync if system preference changes and user hasn't overridden
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
     if (!localStorage.getItem("qss-theme")) {
       setTheme(e.matches ? "dark" : "light");
@@ -43,7 +40,6 @@ function initThemeToggle() {
   });
 }
 
-// Run after DOM ready
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initThemeToggle);
 } else {
