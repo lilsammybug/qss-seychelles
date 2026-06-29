@@ -2788,3 +2788,49 @@ textarea {
     flex-shrink: 0;
   }
 }
+/* ══════════════════════════════════════════════════════
+   NAV FIX — theme toggle always visible on far right
+   Add this to the bottom of style.css
+   ══════════════════════════════════════════════════════ */
+ 
+/* New nav order: logo | nav-links (flex:1) | nav-right */
+nav {
+  /* Keep existing styles, just ensure correct child ordering */
+}
+ 
+.nav-logo {
+  flex-shrink: 0;
+  margin-right: auto; /* pushes everything else right */
+}
+ 
+.nav-links {
+  /* sits in the middle, can shrink if needed */
+  flex-shrink: 1;
+}
+ 
+.nav-right {
+  flex-shrink: 0;
+  margin-left: 0.75rem; /* small gap from nav-links */
+}
+ 
+/* Theme toggle always visible on all screen sizes */
+.theme-toggle {
+  display: flex !important;
+  flex-shrink: 0;
+}
+ 
+/* On mobile: hamburger shows, links hide — toggle still visible */
+@media (max-width: 768px) {
+  .nav-logo {
+    margin-right: 0;
+  }
+ 
+  .nav-links {
+    /* hidden until .open — unchanged */
+    margin-left: 0;
+  }
+ 
+  .nav-right {
+    margin-left: auto; /* push to far right on mobile */
+  }
+}
